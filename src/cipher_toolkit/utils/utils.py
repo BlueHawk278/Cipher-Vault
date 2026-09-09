@@ -1,0 +1,2 @@
+UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+LOWER = "abcdefghijklmnopqrstuvwxyz"

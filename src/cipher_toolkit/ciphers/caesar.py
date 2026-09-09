@@ -1,5 +1,4 @@
-UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-LOWER = "abcdefghijklmnopqrstuvwxyz"
+import cipher_toolkit.utils.utils as utils
 
 class CaesarCipher:
     """Initialises the Caeser Cipher with a validated integer key"""
@@ -16,12 +15,12 @@ class CaesarCipher:
 
         result = []
         for char in text:
-            if char in UPPER:
-                letter = ((UPPER.index(char) + self.key) % 26)
-                result += UPPER[letter]
-            elif char in LOWER:
-                letter = ((LOWER.index(char) + self.key) % 26)
-                result += LOWER[letter]
+            if char in utils.UPPER:
+                letter = ((utils.UPPER.index(char) + self.key) % 26)
+                result += utils.UPPER[letter]
+            elif char in utils.LOWER:
+                letter = ((utils.LOWER.index(char) + self.key) % 26)
+                result += utils.LOWER[letter]
             else:
                 # Keep spaces, punctuation, and numbers unchanged
                 result.append(char)
@@ -32,12 +31,12 @@ class CaesarCipher:
 
         result = []
         for char in text:
-            if char in UPPER:
-                letter = ((UPPER.index(char) - self.key) % 26)
-                result += UPPER[letter]
-            elif char in LOWER:
-                letter = ((LOWER.index(char) - self.key) % 26)
-                result += LOWER[letter]
+            if char in utils.UPPER:
+                letter = ((utils.UPPER.index(char) - self.key) % 26)
+                result += utils.UPPER[letter]
+            elif char in utils.LOWER:
+                letter = ((utils.LOWER.index(char) - self.key) % 26)
+                result += utils.LOWER[letter]
             else:
                 result.append(char)
         return "".join(result)
