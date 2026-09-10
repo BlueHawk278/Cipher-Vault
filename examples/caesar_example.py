@@ -1,4 +1,4 @@
-from src.cipher_toolkit.ciphers.caesar import CaesarCipher
+from ciphers.caesar import CaesarCipher
 
 ### Basic Caesar Cipher Example
 

@@ -1,4 +1,4 @@
-import cipher_toolkit.utils.utils as utils
+import utils.utils as utils
 
 class Frequency:
     cipher_text = None
