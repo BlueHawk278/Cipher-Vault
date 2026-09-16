@@ -6,7 +6,7 @@ class Frequency:
     def __init__(self, text: str) -> None:
         self.cipher_text = text
 
-    def format_text(self) -> str:
+    def format_text(self) -> None:
         """A method to format the cipher text to ensure all text is in uppercase and there are no spaces or punctuation marks."""
         cleaned_text = ""
         for char in self.cipher_text:
