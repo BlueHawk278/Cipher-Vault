@@ -3,7 +3,7 @@ import utils.utils as utils
 class VigenereCipher:
 
     def __init__(self, key: str) -> None:
-        # Save the key entirely in uppercase to make index lookups predictable
+        # Save the key entirely in uppercase to make index lookups easier
         self.key = key.upper()
         self.extendedKey = None
 

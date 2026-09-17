@@ -56,3 +56,11 @@ class Frequency:
             freq = frequencies[letter]
             # :.4f formats the decimal to 4 decimal places
             print(f"{letter:<8} | {count:<6} | {freq:<10.4f}")
+
+    def get_total_letter_count(self) -> int:
+        total_letters = 0
+
+        for key, value in self.get_count().items():
+            total_letters += value
+
+        return total_letters

@@ -1,9 +1,11 @@
+from collections import Counter
+
 class PatternAnalyzer:
 
     def __init__(self, text):
-        self.text = text.Upper()
+        self.text = text.upper()
 
-    def extract_ngrams(self, text, n):
+    def extract_ngrams(self, text, n) -> list:
         """
         Extracts n-grams from the given text.
 
@@ -20,7 +22,7 @@ class PatternAnalyzer:
             ngrams.append(ngram)
         return ngrams
 
-    def get_ngram_positions(self, text, n):
+    def get_ngram_positions(self, text, n) -> dict:
         """
         Finds all n-grams and maps them to their starting indices in the text.
 
@@ -44,7 +46,7 @@ class PatternAnalyzer:
 
         return positions
 
-    def cget_ngram_distances(self, positions):
+    def get_ngram_distances(self, positions) -> dict:
         """
         Calculates the distances between consecutive occurrences of repeating n-grams.
 
@@ -68,3 +70,28 @@ class PatternAnalyzer:
                 distances[ngram] = ngram_distances
 
         return distances
+
+    def get_factors(self, n) -> list:
+        """Returns all factors of a number (excluding 1)"""
+        factors = []
+
+        for i in range(2, n + 1):
+            if n % i == 0:
+                factors.append(i)
+
+        return factors
+
+    def estimate_vigenere_key_length(self, text, n=3, max_key_length=20):
+        """Estimate the vigenere key length using Kasiski examination"""
+        positions = self.get_ngram_positions(text, n)
+        distances = self.get_ngram_distances(positions)
+
+        factor_counts = Counter()
+
+        for n_gram, distance_list in distances.items():
+            for distance in distance_list:
+                for factor in self.get_factors(distance):
+                    if 2 <= factor <= max_key_length:
+                        factor_counts[factor] += 1
+
+        return factor_counts.most_common()
