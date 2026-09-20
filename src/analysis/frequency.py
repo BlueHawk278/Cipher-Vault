@@ -6,7 +6,7 @@ class Frequency:
     def __init__(self, text: str) -> None:
         self.cipher_text = text
 
-    def format_text(self) -> None:
+    def format_text(self) -> str:
         """A method to format the cipher text to ensure all text is in uppercase and there are no spaces or punctuation marks."""
         cleaned_text = ""
         for char in self.cipher_text:
@@ -15,6 +15,7 @@ class Frequency:
             elif char in utils.UPPER:
                 cleaned_text += char
         self.cipher_text = cleaned_text
+        return self.cipher_text
 
     def get_count(self) -> dict:
         """A method to return the amount of appearances of each letter in the cipher text, including 0 for missing letters."""
