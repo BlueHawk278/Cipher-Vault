@@ -2,50 +2,56 @@ import utils.utils as utils
 import math
 
 class AffineCipher:
+    def __init__(self):
+        # Stateless: No keys are stored upon initialization,
+        # allowing a single instance to be reused endlessly.
+        pass
 
-    def __init__(self, keyA, keyB):
+    def _validate_and_get_inverse(self, keyA: int, keyB: int):
+        """Validates keys and calculates the modular inverse for keyA."""
         if not isinstance(keyA, int) or isinstance(keyA, bool):
-            raise TypeError("Key must be a whole integer number.")
-
+            raise TypeError("KeyA must be a whole integer number.")
         if not isinstance(keyB, int) or isinstance(keyB, bool):
-            raise TypeError("Key must be a whole integer number.")
+            raise TypeError("KeyB must be a whole integer number.")
 
-        self.keyA = keyA % 26
-        self.keyB = keyB % 26
+        keyA = keyA % 26
+        keyB = keyB % 26
 
         if math.gcd(keyA, 26) != 1:
             raise ValueError("KeyA must be coprime to 26 (gcd must be 1).")
 
-        # Modular inverse of KeyA for decryption
-        self.keyA_inv = pow(self.keyA, -1, 26)
+        keyA_inv = pow(keyA, -1, 26)
+        return keyA, keyB, keyA_inv
 
-    def encrypt(self, plain_text):
+    def encrypt(self, plain_text: str, keyA: int, keyB: int) -> str:
+        k_a, k_b, _ = self._validate_and_get_inverse(keyA, keyB)
         result = []
 
         for char in plain_text:
             if char in utils.UPPER:
                 x = utils.UPPER.find(char)
-                new_index = (self.keyA * x + self.keyB) % 26
+                new_index = (k_a * x + k_b) % 26
                 result.append(utils.UPPER[new_index])
             elif char in utils.LOWER:
                 x = utils.LOWER.find(char)
-                new_index = (self.keyA * x + self.keyB) % 26
+                new_index = (k_a * x + k_b) % 26
                 result.append(utils.LOWER[new_index])
             else:
                 result.append(char)
         return "".join(result)
 
-    def decrypt(self, cipher_text):
+    def decrypt(self, cipher_text: str, keyA: int, keyB: int) -> str:
+        k_a, k_b, k_a_inv = self._validate_and_get_inverse(keyA, keyB)
         result = []
 
         for char in cipher_text:
             if char in utils.UPPER:
                 y = utils.UPPER.find(char)
-                new_index = (self.keyA_inv * (y - self.keyB)) % 26
+                new_index = (k_a_inv * (y - k_b)) % 26
                 result.append(utils.UPPER[new_index])
             elif char in utils.LOWER:
                 y = utils.LOWER.find(char)
-                new_index = (self.keyA_inv * (y - self.keyB)) % 26
+                new_index = (k_a_inv * (y - k_b)) % 26
                 result.append(utils.LOWER[new_index])
             else:
                 result.append(char)

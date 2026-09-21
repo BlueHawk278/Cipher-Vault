@@ -64,18 +64,18 @@ The shifting formula shifts characters **backward**:
 from ciphers.caesar import CaesarCipher
 
 # We create a cipher object with a key of 5
-cipher = CaesarCipher(5)
+cipher = CaesarCipher()
 
 original_message = "This is a secret message!"
 print(f"Original:  {original_message}")
 
 # When shifted forward by 5, the original message becomes:
-encrypted_message = cipher.encrypt(original_message)
+encrypted_message = cipher.encrypt(original_message, 5)
 print(f"Encrypted: {encrypted_message}")
 # Output: Ymnx nx f xjhwjy rjxxflj!
 
 # When shifted back by 5, the encrypted message returns to its original form:
-decrypted_message = cipher.decrypt(encrypted_message)
+decrypted_message = cipher.decrypt(encrypted_message, 5)
 print(f"Decrypted: {decrypted_message}")
 # Output: This is a secret message!
 ```

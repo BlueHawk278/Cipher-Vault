@@ -1,0 +1,93 @@
+from ciphers.affine import AffineCipher
+from analysis.scoring import NGramScorer
+from analysis.statistics import chi_squared_calculator, ic_calculator
+import math
+
+class AffineSolver:
+
+    def __init__(self):
+        self.cipher = AffineCipher()
+        self.chi_squared_calculator = chi_squared_calculator
+        self.ic_calculator = ic_calculator
+
+        self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
+        self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
+        self.quadgram_scorer = NGramScorer('../../data/ngrams/english_quadgrams.json', 4)
+
+    def solve(self, cipher_text: str, top_n: int = 3) -> list[tuple[int, int, float, str]]:
+        """Solves the Affine cipher by testing all valid key pairs and returning the top N results."""
+        key_pairs = self.generate_all_key_pairs()
+        scored_results = []
+
+        for a, b in key_pairs:
+            # Temporarily remove try/except to see the actual error
+            decoded_text = self.cipher.decrypt(cipher_text, a, b)
+            score = self.score_text(decoded_text)
+            scored_results.append((a, b, score, decoded_text))
+
+        scored_results.sort(key=lambda x: x[2])
+        return scored_results[:top_n]
+
+    def generate_all_key_pairs(self) -> list[tuple[int, int]]:
+        """Generates all 312 valid (a, b) key pairs where a is coprime to 26 and b is 0-25."""
+        valid_a = [a for a in range(1, 26) if math.gcd(a, 26) == 1]
+        key_pairs = []
+
+        for a in valid_a:
+            for b in range(26):
+                key_pairs.append((a, b))
+
+        return key_pairs
+
+    def score_text(self, text: str) -> float:
+        """Scores the text combining chi-squared, n-grams, and Index of Coincidence."""
+        chi_score = self.chi_squared_test(text)
+        ngram_score = self.ngram_log_test(text)
+        ic_score = self.ic_test(text)
+
+        # Target IC for English text
+        target_ic = 0.067
+
+        # Calculate how far the text's IC is from normal English.
+        ic_penalty = abs(ic_score - target_ic)
+
+        # Combine scores:
+        # - Lower chi_score is better
+        # - Higher ngram_score is better
+        # - Higher ic_penalty is worse
+        combined_score = chi_score - (ngram_score * 0.1) + (ic_penalty * 100)
+
+        return combined_score
+
+    def chi_squared_test(self, text: str) -> float:
+        calculator = self.chi_squared_calculator(text)
+        return calculator.calculate_score()
+
+    def ngram_log_test(self, text: str) -> float:
+        bigram_score = self.bigram_scorer.score_text(text)
+        trigram_score = self.trigram_scorer.score_text(text)
+        quadgram_score = self.quadgram_scorer.score_text(text)
+
+        weighted_score = (bigram_score * 0.1) + (trigram_score * 0.3) + (quadgram_score * 0.6)
+        return weighted_score
+
+    def ic_test(self, text: str) -> float:
+        calculator = self.ic_calculator()
+        return calculator.calculate_ic(text)
+
+solver = AffineSolver()
+encrypted = """RSPEG XTSDE APHQU XCUFZ ZRSDJ KCHQT ZFRSF GJFZZ
+DTFZZ XGADG GAFPR DQXQC PKFNQ ZRSDJ KCFYK PGAFS
+FRFHU FSDQY QXGKP DQPKX YPFCZ FBAXJ HTAGH QGFSR
+FEGGA FJGAF ZRSDJ KCHQT ESXRF ZZSFL NHSFZ GAFNZ
+FXMDZ FRSFG VFPDQ YGSDY HGHXQ DCCPN QZRSD JKCHQ
+TGAFJ FZZDT FZHJE CPSFL NHSFZ GAFSF RFHUF SGXDE
+ECPGA FVFPH QSFUF SZF
+"""
+
+top_results = solver.solve(encrypted, top_n=3)
+
+for rank, (key_a, key_b, score, decoded_text) in enumerate(top_results, 1):
+    print(f"--- Rank {rank} ---")
+    print(f"Key A: {key_a} | Key B: {key_b} | Score: {score:.4f}")
+    print(f"Decoded Text:\n{decoded_text}\n")

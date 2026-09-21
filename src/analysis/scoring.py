@@ -28,7 +28,8 @@ class NGramScorer:
     def score_text(self, text):
         """Evaluates a candidate text using overlapping n-gram probabilities."""
         score = 0.0
-        text = Frequency.format_text(text)
+        frequency = Frequency(text)
+        frequency.format_text()
 
         if (len(text) < self.n):
             return self.floor_score * len(text)
