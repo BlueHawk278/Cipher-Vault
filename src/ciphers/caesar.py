@@ -1,7 +1,6 @@
 import utils.utils as utils
 
 class CaesarCipher:
-    """Initializes the Caesar Cipher with a validated integer key"""
 
     def encrypt(self, plain_text: str, key: int) -> str:
         """Encrypts plain text by shifting letters forward by the key."""
