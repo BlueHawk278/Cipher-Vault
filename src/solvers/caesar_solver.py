@@ -59,19 +59,3 @@ class CaesarSolver:
         weighted_score = (bigram_score * 0.1) + (trigram_score * 0.3) + (quadgram_score * 0.6)
 
         return weighted_score
-
-solver = CaesarSolver()
-encrypted = """MAX YBKLM WHVNFXGMXW NLX HY T LNULMBMNMBHG VBIAXK YHK
-FBEBMTKR INKIHLXL TIIXTKL BG CNEBNL VTXLTKL ZTEEBV PTKL VTXLTK
-WXLVKBUXL AHP AX LXGM T FXLLTZX MH VBVXKH PAH PTL UXLBXZXW TGW
-HG MAX OXKZX HY LNKKXGWXKBGZ MAX LNULMBMNMBHG KXIETVXW KHFTG
-EXMMXKL PBMA ZKXXD EXMMXKL KXGWXKBGZ MAX FXLLTZX NGBGMXEEBZBUEX MH
-MAX XGXFR
-"""
-
-top_results = solver.solve(encrypted, top_n=3)
-
-for rank, (shift, score, decoded_text) in enumerate(top_results, 1):
-    print(f"--- Rank {rank} ---")
-    print(f"Shift: {shift} | Score: {score:.4f}")
-    print(f"Decoded Text:\n{decoded_text}\n")

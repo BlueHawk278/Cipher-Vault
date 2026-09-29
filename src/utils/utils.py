@@ -1,4 +1,5 @@
 import json
+import re
 
 UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 LOWER = "abcdefghijklmnopqrstuvwxyz"
@@ -30,3 +31,6 @@ def convert_txt_to_json(txt_filepath, json_filepath):
         json.dump(ngram_counts, f, indent=4)
 
     print(f"Successfully converted {txt_filepath} -> {json_filepath}!")
+
+def normalize(text: str) -> str:
+    return re.sub(r'[^A-Z]', '', text.upper())

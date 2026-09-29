@@ -74,20 +74,3 @@ class AffineSolver:
     def ic_test(self, text: str) -> float:
         calculator = self.ic_calculator()
         return calculator.calculate_ic(text)
-
-solver = AffineSolver()
-encrypted = """RSPEG XTSDE APHQU XCUFZ ZRSDJ KCHQT ZFRSF GJFZZ
-DTFZZ XGADG GAFPR DQXQC PKFNQ ZRSDJ KCFYK PGAFS
-FRFHU FSDQY QXGKP DQPKX YPFCZ FBAXJ HTAGH QGFSR
-FEGGA FJGAF ZRSDJ KCHQT ESXRF ZZSFL NHSFZ GAFNZ
-FXMDZ FRSFG VFPDQ YGSDY HGHXQ DCCPN QZRSD JKCHQ
-TGAFJ FZZDT FZHJE CPSFL NHSFZ GAFSF RFHUF SGXDE
-ECPGA FVFPH QSFUF SZF
-"""
-
-top_results = solver.solve(encrypted, top_n=3)
-
-for rank, (key_a, key_b, score, decoded_text) in enumerate(top_results, 1):
-    print(f"--- Rank {rank} ---")
-    print(f"Key A: {key_a} | Key B: {key_b} | Score: {score:.4f}")
-    print(f"Decoded Text:\n{decoded_text}\n")

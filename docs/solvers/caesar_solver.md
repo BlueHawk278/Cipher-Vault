@@ -49,17 +49,18 @@ $$\text{Combined Score} = \chi^2 - (S_{\text{ngram}} \times 0.1)$$
 ## Basic Usage Example
 
 ```python
-from ciphers.caesar_solver import CaesarSolver
-
-# Initialize the automated solver
 solver = CaesarSolver()
+encrypted = """MAX YBKLM WHVNFXGMXW NLX HY T LNULMBMNMBHG VBIAXK YHK
+FBEBMTKR INKIHLXL TIIXTKL BG CNEBNL VTXLTKL ZTEEBV PTKL VTXLTK
+WXLVKBUXL AHP AX LXGM T FXLLTZX MH VBVXKH PAH PTL UXLBXZXW TGW
+HG MAX OXKZX HY LNKKXGWXKBGZ MAX LNULMBMNMBHG KXIETVXW KHFTG
+EXMMXKL PBMA ZKXXD EXMMXKL KXGWXKBGZ MAX FXLLTZX NGBGMXEEBZBUEX MH
+MAX XGXFR
+"""
 
-# Provide an encrypted ciphertext string
-encrypted_message = "MAX YBKLM WHVNFXGMXW..."
-
-# Get the top 3 most likely decrypted solutions
-top_results = solver.solve(encrypted_message, top_n=3)
+top_results = solver.solve(encrypted, top_n=3)
 
 for rank, (shift, score, decoded_text) in enumerate(top_results, 1):
-    print(f"Rank {rank} | Shift: {shift} | Score: {score:.4f}")
-    print(f"Decoded: {decoded_text}\n")
+    print(f"--- Rank {rank} ---")
+    print(f"Shift: {shift} | Score: {score:.4f}")
+    print(f"Decoded Text:\n{decoded_text}\n")
