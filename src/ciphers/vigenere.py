@@ -2,12 +2,12 @@ import utils.utils as utils
 
 class VigenereCipher:
 
-    def __init__(self, key: str) -> None:
-        # Save the key entirely in uppercase to make index lookups easier
-        self.key = key.upper()
+    def __init__(self):
         self.extendedKey = None
+        self.key = None
 
-    def encrypt(self, plain_text: str) -> str:
+    def encrypt(self, plain_text: str, key: str) -> str:
+        self.key = key.upper()
         self.extendedKey = (self.key * len(plain_text))[: len(plain_text)]
         result = []
 
@@ -27,7 +27,8 @@ class VigenereCipher:
                 result.append(char)
         return "".join(result)
 
-    def decrypt(self, cipher_text: str) -> str:
+    def decrypt(self, cipher_text: str, key: str) -> str:
+        self.key = key.upper()
         self.extendedKey = (self.key * len(cipher_text))[: len(cipher_text)]
         result = []
 

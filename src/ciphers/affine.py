@@ -2,10 +2,6 @@ import utils.utils as utils
 import math
 
 class AffineCipher:
-    def __init__(self):
-        # Stateless: No keys are stored upon initialization,
-        # allowing a single instance to be reused endlessly.
-        pass
 
     def _validate_and_get_inverse(self, keyA: int, keyB: int):
         """Validates keys and calculates the modular inverse for keyA."""

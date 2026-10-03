@@ -9,12 +9,12 @@ def remove_zero_dict(d: dict) -> dict:
     for key, value in d.items():
         if value != 0:
             dict[key] = value
+    return dict
 
 def get_english_letter_frequency_dict():
     with open('../../data/statistics/english_letter_frequencies.json', 'r') as file:
         data_dict = json.load(file)
         return data_dict
-
 
 def convert_txt_to_json(txt_filepath, json_filepath):
     ngram_counts = {}
