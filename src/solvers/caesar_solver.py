@@ -1,12 +1,12 @@
 from ciphers.caesar import CaesarCipher
-from analysis.scoring import NGramScorer
-from analysis.statistics import chi_squared_calculator
+from analysis.n_gram_scorer import NGramScorer
+from analysis.chi_squared_calculator import Chi_Squared_Calculator
 
 class CaesarSolver:
 
     def __init__(self):
         self.cipher = CaesarCipher()
-        self.chi_squared_calculator = chi_squared_calculator
+        self.chi_squared_calculator = Chi_Squared_Calculator()
 
         self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
         self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
@@ -46,8 +46,7 @@ class CaesarSolver:
         return combined_score
 
     def chi_squared_test(self, text: str) -> float:
-        calculator = self.chi_squared_calculator(text)
-        return calculator.calculate_score()
+        return self.chi_squared_calculator.calculate_score(text)
 
     def ngram_log_test(self, text: str) -> float:
         bigram_score = self.bigram_scorer.score_text(text)

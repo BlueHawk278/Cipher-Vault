@@ -1,14 +1,15 @@
 from ciphers.affine import AffineCipher
-from analysis.scoring import NGramScorer
-from analysis.statistics import chi_squared_calculator, ic_calculator
+from analysis.n_gram_scorer import NGramScorer
+from analysis.ic_calculator import IC_Calculator
+from analysis.chi_squared_calculator import Chi_Squared_Calculator
 import math
 
 class AffineSolver:
 
     def __init__(self):
         self.cipher = AffineCipher()
-        self.chi_squared_calculator = chi_squared_calculator
-        self.ic_calculator = ic_calculator
+        self.chi_squared_calculator = Chi_Squared_Calculator()
+        self.ic_calculator = IC_Calculator()
 
         self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
         self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
@@ -60,8 +61,7 @@ class AffineSolver:
         return combined_score
 
     def chi_squared_test(self, text: str) -> float:
-        calculator = self.chi_squared_calculator(text)
-        return calculator.calculate_score()
+        return self.chi_squared_calculator.calculate_score(text)
 
     def ngram_log_test(self, text: str) -> float:
         bigram_score = self.bigram_scorer.score_text(text)
@@ -72,5 +72,4 @@ class AffineSolver:
         return weighted_score
 
     def ic_test(self, text: str) -> float:
-        calculator = self.ic_calculator()
-        return calculator.calculate_ic(text)
+        return self.ic_calculator.calculate_ic(text)

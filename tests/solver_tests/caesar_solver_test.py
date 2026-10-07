@@ -1,5 +1,4 @@
 import json
-
 from utils.utils import normalize
 from solvers.caesar_solver import CaesarSolver
 

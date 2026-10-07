@@ -1,8 +1,6 @@
 import json
 from typing import Any
-
 from utils.utils import normalize
-
 from solvers.affine_solver import AffineSolver
 
 class AffineSolverTest:
