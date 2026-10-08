@@ -1,6 +1,8 @@
-from analysis.frequency import Frequency as Frequency
+from src.analysis.frequency import Frequency
+from pathlib import Path
 import json
 import math
+
 
 class NGramScorer:
     def __init__(self, filepath, n):
@@ -10,8 +12,11 @@ class NGramScorer:
         self.load_data(filepath)
 
     def load_data(self, filepath):
-        """Loads frequency data from JSON and converts to log10 probabilities."""
-        with open(filepath, 'r') as f:
+        """Loads frequency data from JSON and converts to log10 probabilities safely."""
+        # Convert incoming relative strings dynamically from this file context
+        target_path = Path(__file__).resolve().parent / filepath
+
+        with open(target_path, 'r') as f:
             raw_data = json.load(f)
 
         total_count = sum(raw_data.values())
@@ -28,14 +33,13 @@ class NGramScorer:
     def score_text(self, text):
         """Evaluates a candidate text using overlapping n-gram probabilities."""
         score = 0.0
-        frequency = Frequency(text)
-        frequency.format_text()
 
-        if (len(text) < self.n):
+        # Guard clause handling short values safely
+        if len(text) < self.n:
             return self.floor_score * len(text)
 
         for i in range(len(text) - self.n + 1):
-            ngram = text[i:i + self.n]
+            ngram = text[i:i + self.n].upper()
             score += self.ngram_scores.get(ngram, self.floor_score)
 
         return score

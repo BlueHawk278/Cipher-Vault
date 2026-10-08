@@ -1,18 +1,20 @@
 import json
 import re
+from pathlib import Path
 
 UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 LOWER = "abcdefghijklmnopqrstuvwxyz"
 
 def remove_zero_dict(d: dict) -> dict:
-    dict = {}
+    filtered_dict = {}
     for key, value in d.items():
         if value != 0:
-            dict[key] = value
-    return dict
+            filtered_dict[key] = value
+    return filtered_dict
 
 def get_english_letter_frequency_dict():
-    with open('../../data/statistics/english_letter_frequencies.json', 'r') as file:
+    file_path = Path(__file__).resolve().parent / '../../data/statistics/english_letter_frequencies.json'
+    with open(file_path, 'r') as file:
         data_dict = json.load(file)
         return data_dict
 
