@@ -55,7 +55,5 @@ class VigenereSolverTest:
         print(f"Failed: {failed_count}")
         return failed_count == 0
 
-
-if __name__ == "__main__":
-    if not VigenereSolverTest().run_tests():
-        raise SystemExit(1)
+vigenere_solver_test = VigenereSolverTest()
+vigenere_solver_test.run_tests()

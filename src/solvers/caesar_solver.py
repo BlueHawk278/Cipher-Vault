@@ -2,15 +2,16 @@ from ciphers.caesar import CaesarCipher
 from analysis.n_gram_scorer import NGramScorer
 from analysis.chi_squared_calculator import Chi_Squared_Calculator
 
+
 class CaesarSolver:
 
     def __init__(self):
         self.cipher = CaesarCipher()
         self.chi_squared_calculator = Chi_Squared_Calculator()
 
-        self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
-        self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
-        self.quadgram_scorer = NGramScorer('../../data/ngrams/english_quadgrams.json', 4)
+        self.bigram_scorer = NGramScorer('data/ngrams/english_bigrams.json', 2)
+        self.trigram_scorer = NGramScorer('data/ngrams/english_trigrams.json', 3)
+        self.quadgram_scorer = NGramScorer('data/ngrams/english_quadgrams.json', 4)
 
     def solve(self, cipher_text: str, top_n: int = 3) -> list[tuple[int, float, str]]:
         """Solves the cipher and returns the top N most likely shifts, scores, and texts."""
@@ -21,10 +22,8 @@ class CaesarSolver:
             score = self.score_text(decoded_text)
             scored_shifts.append((shift, score, decoded_text))
 
-        # Sort by score in ascending order (lower score is better)
         scored_shifts.sort(key=lambda x: x[1])
 
-        # Return the top N results
         return scored_shifts[:top_n]
 
     def generate_all_shifts(self, cipher_text: str) -> dict[int, str]:
@@ -53,8 +52,6 @@ class CaesarSolver:
         trigram_score = self.trigram_scorer.score_text(text)
         quadgram_score = self.quadgram_scorer.score_text(text)
 
-        # Quadgrams are usually the most reliable for English,
-        # so they get a higher weight than bigrams or trigrams
         weighted_score = (bigram_score * 0.1) + (trigram_score * 0.3) + (quadgram_score * 0.6)
 
         return weighted_score

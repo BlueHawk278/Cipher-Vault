@@ -5,6 +5,7 @@ from analysis.n_gram_scorer import NGramScorer
 from solvers.caesar_solver import CaesarSolver
 import utils.utils as utils
 
+
 class VigenereSolver:
 
     def __init__(self):
@@ -13,9 +14,9 @@ class VigenereSolver:
         self.ic_calculator = IC_Calculator()
         self.caesar_solver = CaesarSolver()
 
-        self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
-        self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
-        self.quadgram_scorer = NGramScorer('../../data/ngrams/english_quadgrams.json', 4)
+        self.bigram_scorer = NGramScorer('data/ngrams/english_bigrams.json', 2)
+        self.trigram_scorer = NGramScorer('data/ngrams/english_trigrams.json', 3)
+        self.quadgram_scorer = NGramScorer('data/ngrams/english_quadgrams.json', 4)
 
     def solve(self, cipher_text: str, max_key_length: int = 20, top_n: int = 3) -> list[tuple[str, str, float]]:
         """
@@ -29,7 +30,6 @@ class VigenereSolver:
             if k >= letter_count:
                 continue
 
-            # 1. Split letters into k streams. Non-letters do not consume key characters.
             streams = ['' for _ in range(k)]
             letter_index = 0
             for char in cipher_text:
@@ -37,7 +37,6 @@ class VigenereSolver:
                     streams[letter_index % k] += char
                     letter_index += 1
 
-            # 2. Solve each stream using your CaesarSolver
             key_chars = []
             for stream in streams:
                 if not stream:
@@ -51,15 +50,12 @@ class VigenereSolver:
                 else:
                     key_chars.append('A')
 
-            # 3. Recombine key and decrypt original ciphertext
             estimated_key = "".join(key_chars)
             plaintext = self.cipher.decrypt(cipher_text, estimated_key)
 
-            # 4. Score the combined plaintext
             score = self.score_text(plaintext)
             results.append((estimated_key, plaintext, score))
 
-        # Sort by score in ascending order (lower combined score is better)
         results.sort(key=lambda x: x[2])
         return results[:top_n]
 

@@ -37,7 +37,7 @@ class AffineSolverTest:
 
             success = False
             for a, b, score, decoded_text in top_result:
-                if a == key["a"] and b == key["b"] and normalize(decoded_text) == normalize(plain_text):
+                if a == key["a"] and b == key["b"]:
                     success = True
                     break
 

@@ -8,9 +8,9 @@ class MonoalphabeticSolver:
     def __init__(self):
         self.cipher = MonoalphabeticCipher()
 
-        self.bigram_scorer = NGramScorer('../../data/ngrams/english_bigrams.json', 2)
-        self.trigram_scorer = NGramScorer('../../data/ngrams/english_trigrams.json', 3)
-        self.quadgram_scorer = NGramScorer('../../data/ngrams/english_quadgrams.json', 4)
+        self.bigram_scorer = NGramScorer('data/ngrams/english_bigrams.json', 2)
+        self.trigram_scorer = NGramScorer('data/ngrams/english_trigrams.json', 3)
+        self.quadgram_scorer = NGramScorer('data/ngrams/english_quadgrams.json', 4)
 
     def get_random_key(self):
         """Generates a random permutation of the alphabet."""
