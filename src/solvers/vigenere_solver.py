@@ -1,7 +1,5 @@
+from analysis.scoring import Scorer
 from ciphers.vigenere import VigenereCipher
-from analysis.ic_calculator import IC_Calculator
-from analysis.chi_squared_calculator import Chi_Squared_Calculator
-from analysis.n_gram_scorer import NGramScorer
 from solvers.caesar_solver import CaesarSolver
 import utils.utils as utils
 
@@ -10,13 +8,8 @@ class VigenereSolver:
 
     def __init__(self):
         self.cipher = VigenereCipher()
-        self.chi_squared_calculator = Chi_Squared_Calculator()
-        self.ic_calculator = IC_Calculator()
         self.caesar_solver = CaesarSolver()
-
-        self.bigram_scorer = NGramScorer('data/ngrams/english_bigrams.json', 2)
-        self.trigram_scorer = NGramScorer('data/ngrams/english_trigrams.json', 3)
-        self.quadgram_scorer = NGramScorer('data/ngrams/english_quadgrams.json', 4)
+        self.scorer = Scorer()
 
     def solve(self, cipher_text: str, max_key_length: int = 20, top_n: int = 3) -> list[tuple[str, str, float]]:
         """
@@ -53,25 +46,8 @@ class VigenereSolver:
             estimated_key = "".join(key_chars)
             plaintext = self.cipher.decrypt(cipher_text, estimated_key)
 
-            score = self.score_text(plaintext)
+            score = self.scorer.score_text(plaintext)
             results.append((estimated_key, plaintext, score))
 
         results.sort(key=lambda x: x[2])
         return results[:top_n]
-
-    def score_text(self, text: str) -> float:
-        chi_score = self.chi_squared_test(text)
-        ngram_score = self.ngram_log_test(text)
-        return chi_score - (ngram_score * 0.1)
-
-    def chi_squared_test(self, text: str) -> float:
-        return self.chi_squared_calculator.calculate_score(text)
-
-    def ic_test(self, text: str) -> float:
-        return self.ic_calculator.calculate_ic(text)
-
-    def ngram_log_test(self, text: str) -> float:
-        bigram_score = self.bigram_scorer.score_text(text)
-        trigram_score = self.trigram_scorer.score_text(text)
-        quadgram_score = self.quadgram_scorer.score_text(text)
-        return (bigram_score * 0.1) + (trigram_score * 0.3) + (quadgram_score * 0.6)
