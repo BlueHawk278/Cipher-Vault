@@ -31,8 +31,7 @@ class CaesarSolver:
         decoded_texts = {}
 
         for i in range(0, 26):
-            decoded_text = self.cipher.decrypt(cipher_text, i)
-            decoded_texts[i] = decoded_text
+            decoded_texts[i] = self.cipher.decrypt(cipher_text, i)
 
         return decoded_texts
 

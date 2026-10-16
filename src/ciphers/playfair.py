@@ -95,20 +95,15 @@ class PlayfairCipher:
           return int(r[0]), int(c[0])
         return None
 
-# Create a single instance
 cipher = PlayfairCipher()
 
-# Encrypt with one key
-msg1 = "Secret Message"
-key1 = "MONARCHY"
-encrypted_text = cipher.encrypt(msg1, key1)
-print(f"Encrypted: {encrypted_text}")
+original_message = "Secret Message"
+keyword = "Monarchy"
 
-# Decrypt using the same key
-decrypted_text = cipher.decrypt(encrypted_text, key1)
-print(f"Decrypted: {decrypted_text}")
+print(f"Original: {original_message}")
 
-# Reuse the SAME object with a completely different key
-key2 = "CIPHER"
-encrypted_with_new_key = cipher.encrypt("Hello", key2)
-print(f"Encrypted with key2: {encrypted_with_new_key}")
+encrypted_message = cipher.encrypt(original_message, keyword)
+print(f"Encrypted: {encrypted_message}")
+
+decrypted_message = cipher.decrypt(encrypted_message, keyword)
+print(f"Decrypted: {decrypted_message}")
