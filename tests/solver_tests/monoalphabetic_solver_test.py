@@ -5,6 +5,7 @@ from typing import Any
 from solvers.monoalphabetic_solver import MonoalphabeticSolver
 import utils.utils as utils
 
+
 class MonoalphabeticSolverTest:
 
     def __init__(self):
@@ -60,36 +61,46 @@ class MonoalphabeticSolverTest:
 
             results = []
             for suffix, ciphertext, plaintext in pairs:
+                # Increased num_restarts to 50 for higher accuracy on tough ciphertexts
                 best_key, decrypted_text, score = self.solver.solve(
                     ciphertext,
                     fitness_func=self.solver.fitness_func,
-                    num_restarts=25,
+                    num_restarts=50,
                     max_iterations=10000
                 )
-                # For monoalphabetic substitution, multiple different keys can produce valid English text.
-                # We only need to verify that the decrypted text is correct, not the exact key.
                 text_match = utils.normalize(decrypted_text) == utils.normalize(plaintext)
+
+                # Check functional equivalence (do both keys decrypt the ciphertext identically?)
+                expected_decryption = self.solver.cipher.decrypt(ciphertext, key)
+                found_decryption = self.solver.cipher.decrypt(ciphertext, best_key)
+                keys_are_functionally_equivalent = expected_decryption == found_decryption
+
+                success_condition = text_match or keys_are_functionally_equivalent
+
                 results.append((
+                    score,
                     suffix,
-                    text_match,
+                    success_condition,
                     best_key,
                     decrypted_text,
                 ))
 
-            success = all(result[1] for result in results)
+            success = all(result[2] for result in results)
 
             if success:
                 print(f"✓ [PASS] Challenge #{i + 1}")
                 print(f"  Expected Key: {key}")
-                print(f"  Found Key:    {results[0][2]}")
-                print(f"  Score:        {results[0][2]}")
+                print(f"  Found Key:    {results[0][3]}")
+                print(f"  Score:        {results[0][0]}")
                 passed_count += 1
             else:
                 print(f"✗ [FAIL] Challenge #{i + 1}")
                 print(f"  Expected Key: {key}")
-                for suffix, success, found_key, decrypted_text in results:
-                    if not success:
+
+                for score, suffix, text_match, found_key, decrypted_text in results:
+                    if not text_match:
                         print(f"\n  Attempt{suffix or ''}:")
+                        print(f"    Score: {score}")
                         print(f"    Found Key: {found_key}")
                         print(f"    Decrypted text (first 200 chars):")
                         text_preview = decrypted_text.replace('\n', ' ')[:200]
@@ -106,5 +117,7 @@ class MonoalphabeticSolverTest:
         print("=" * 70)
         return failed_count == 0
 
-monoalphabetic_solver_test = MonoalphabeticSolverTest()
-monoalphabetic_solver_test.run_tests()
+
+if __name__ == "__main__":
+    monoalphabetic_solver_test = MonoalphabeticSolverTest()
+    monoalphabetic_solver_test.run_tests()
